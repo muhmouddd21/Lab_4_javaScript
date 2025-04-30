@@ -1,0 +1,49 @@
+.form-1{
+    width: 500px;
+    margin: 100px auto;
+}
+.form-1 button{
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    
+}
+.images{
+    width: 400px;
+    margin: auto;
+}
+
+img{
+    width: 300px;
+    height: 300px;
+    display: none;
+}
+
+.images img.now{
+    display:block;
+}
+.question-2{
+    width: 500px;
+    height: 500px;
+    background-color: #eee;
+    margin: 100px auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.question-2 .data{
+    display: flex;
+    flex-direction: column;
+}
+.question-2 div{
+    padding-top: 30px;
+}
+.table-1{
+    padding: 20px;
+    width: 100%;
+}
+.table-1 tbody {
+    border: solid 1px white;
+}
