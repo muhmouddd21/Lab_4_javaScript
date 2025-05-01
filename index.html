@@ -35,6 +35,7 @@
                 <input type="text" name="studentName" id="">
                 <label for="studentGrade">studentGrade</label>
                 <input type="text" name="studentGrade" id="">
+                <span id="errorMassage"></span>
 
             </div>
             <div class="adding">
@@ -142,8 +143,8 @@
                 htmlText +=
                             `
                                 <tr>
-                                <td>${tableData[i].name}</td>
-                                <td>${tableData[i].degree}</td>
+                                <td id ="name-${i}">${tableData[i].name}</td>
+                                <td id ="degree-${i}" >${tableData[i].degree}</td>
                                 <td>
                                     <button type="button" onclick="deleteElement(${i})" id="del-${i}">delete</button>
                                 </td>
@@ -152,6 +153,7 @@
             }
             let targetTable = document.getElementById("targetTable");
             targetTable.innerHTML =htmlText;
+            changeColor()
         }
 
             
@@ -164,9 +166,32 @@
             })
             addDataForTheFirstTime();
         }
+        // <<<<<<<<<<<<<<<<<<<<<<<<< changing color of table element >>>>>>>>>>>>>>>>>>
 
+        function changeColor(){
+            
+            for(let i =0; i<tableData.length; i++){
+                if(tableData[i].degree <60){
+                    document.getElementById(`name-${i}`).style.backgroundColor ="red";
+                    document.getElementById(`degree-${i}`).style.backgroundColor ="red";
+                    
+                }
+                if(tableData[i].degree >= 60 && tableData[i].degree <= 75){
+                    document.getElementById(`name-${i}`).style.backgroundColor ="yellow";
+                    document.getElementById(`degree-${i}`).style.backgroundColor ="yellow";
+                }
+                if(tableData[i].degree > 75){
+                    document.getElementById(`name-${i}`).style.backgroundColor ="green";
+                    document.getElementById(`degree-${i}`).style.backgroundColor ="green";
+                }
+            }
+        }
      
-        
+        // <<<<<<<<<<<<<<<<<<<<<<<<< changing color of table element >>>>>>>>>>>>>>>>>>
+
+
+        // <<<<<<<<<<<< check if the value of name exists or not >>>>>>>>>>>>
+
         function inTable(name){
             for(let i=0; i< tableData.length; i++){
                 if(name === tableData[i].name){
@@ -179,14 +204,51 @@
             if (!str) return '';
             return str.charAt(0).toUpperCase() + str.slice(1);
         }
-        
-        document.forms[1][3].value
+        // <<<<<<<<<<<< check if the value of name exists or not >>>>>>>>>>>>
+
+
+        // <<<<<<<< adding errors of validation to html >>>>>>>>>>>>
+        let timerId2=null;
+        let errors=[];
+        function addErrors(){
+            if (timerId2 !== null) {
+                clearTimeout(timerId2);
+            }
+            document.getElementById("errorMassage").innerHTML  = "";
+            document.getElementById("errorMassage").style.display = "block";
+            console.log(errors);
+            
+            for(error of errors){
+                document.getElementById("errorMassage").innerHTML += `${error}<br>`;
+            }
+            document.getElementById("errorMassage").style.fontSize ="10px"
+            document.getElementById("errorMassage").style.backgroundColor ="red"
+            timerId2=setTimeout(()=>{
+                document.getElementById("errorMassage").style.display="none";
+            },2000 )
+
+        }
+
+
+         // <<<<<<<< adding errors of validation to html >>>>>>>>>>>>
+
+
+
+
+
         function add(event){
             let valueNumber = Number(document.forms[1][4].value); 
-
-
-            if((!(document.forms[1][3].value)) || inTable(capitalizeFirst(document.forms[1][3].value)) || isNaN(document.forms[1][4].value) || !(valueNumber > 0 && valueNumber < 100)){
+            event.preventDefault();
+            errors=[];
+            if((!(document.forms[1][3].value)) || inTable(capitalizeFirst(document.forms[1][3].value)) || isNaN(document.forms[1][4].value) || !(valueNumber > 0 && valueNumber <= 100)){
+                
+                if(!(document.forms[1][3].value)) errors.push("Empty StudentName");
+                if(inTable(capitalizeFirst(document.forms[1][3].value))) errors.push("The student Exists already");
+                if(isNaN(document.forms[1][4].value))  errors.push("Degree must be a number");
+                if(!(valueNumber > 0 && valueNumber < 100)) errors.push("Degree must be in between 0 and 100");
                 event.preventDefault();
+                
+                addErrors();
             }
             else{
                 addElement(capitalizeFirst(document.forms[1][3].value),document.forms[1][4].value);
@@ -230,6 +292,7 @@
 
      
         // filter function
+
         let filtered=[];
         function filter(){
             let filtered=[]
@@ -248,8 +311,8 @@
                 htmlText +=
                             `
                                 <tr>
-                                <td>${filtered[i].name}</td>
-                                <td>${filtered[i].degree}</td>
+                                <td id="name-${i}">${filtered[i].name}</td>
+                                <td id="degree-${i}">${filtered[i].degree}</td>
                                 <td>
                                     <button type="button" onclick="deleteElement(${i})" id="del-${i}">delete</button>
                                 </td>
@@ -258,6 +321,11 @@
             }
             let targetTable = document.getElementById("targetTable");
             targetTable.innerHTML =htmlText;
+            for(let i=0; i<filtered.length; i++){
+                document.getElementById(`name-${i}`).style.backgroundColor ="red";
+                document.getElementById(`degree-${i}`).style.backgroundColor ="red";
+            }
+
         };
  
         const filterSelect = document.getElementById("filter");
@@ -274,7 +342,7 @@
         }
         });
 
-        // delete element 
+        // delete element from table
 
         function deleteElement(index){
             for(let i=0;i<tableData.length;i++){
